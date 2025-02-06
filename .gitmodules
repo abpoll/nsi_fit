@@ -1,0 +1,3 @@
+[submodule "unsafe"]
+	path = unsafe
+	url = git@github.com:abpoll/unsafe.git
