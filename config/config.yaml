@@ -154,7 +154,7 @@ sows: 10000
 # For this case study, we have 50 representations
 # of the same event. These files have the
 # same filenaming convention
-haz_filename: "Irene/ENS_0{ens_num}.txt"
+haz_filename: "Irene/Irene_final/ENS_{ens_num}.txt"
 # Number of ensemble members
 haz_nens: 50
 # Number of columns for each depth grid
