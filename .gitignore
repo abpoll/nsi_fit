@@ -1,6 +1,7 @@
 # Folders to ignore
 # In general, we don't want the data directory
 data
+fig
 
 # Jupyter NB Checkpoints #
 ##########################
