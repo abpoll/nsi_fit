@@ -94,63 +94,73 @@ ref_id_names:
   county: "GEOID"
   zcta: "GEOID20"
 
-# Constants for loss estimation
 # Uncertainty for structure values
-# State of the art automated valuation models
-# are generally mean unbiased
-# This paper https://www.tandfonline.com/doi/full/10.1080/09599916.2020.1807587
-# suggests that a linear model can capture ~ 40% of structure value
-# estimates by w/in 10% of their value, and ~ 83% of structure value estimates
-# by w/in 30% of their value
-# We don't have guidance on what
-# the accuracy of NJ assessments are
-# We also don't have guidance on how well the
-# NSI structure values are calibrated. They are modeled from
-# a non-transparent process and do not come with uncertainty
-# or bias estimates
-# If we use guidance from the Krause et al. paper linked
-# above, we can define a normal distribution that is centered
-# at the predicted value and has a standard deviation
-# equal to predicted value * .2. At the min structure value
-# in our case study, $50K, if you 
-# look at the probability of getting a value within 
-# the predicted value +/- predicted value *.3, it's
-# around .87. So that's a bit better than
-# what Krause gets but it's pretty close. 
-# For pv +/- pv*.1 it's .38. So, that's a little
-# worse than Krause but pretty close. 
-# If we make the scaling factor smaller, 
-# like .15, the latter estimate goes to .495
-# which is over-optimistic. For pv*.3 it's
-# .95 which is way too over-optimistic. 
-# .2 seems ok. What about at the max
-# value? Roughly 440k. For *.1 you get
-# .38 which is pretty good. and for *.3
-# you get .86. So, .2 seems like a good call. 
 coef_var: .2
 
 # Dictionary of foundation types 
-# Triangular distributions for first-floor elevation conditioned
-# on foundation type
-# From this repo: https://github.com/HenryGeorgist/go-fathom/
-# blob/master/compute/foundationheights.go
-# from the wing et al. 2022 paper
-# distributions (min, most likely, max) conditioned on foundation type
-# Tri(0, .5, 1.5|Slab)
-# Tri(0, 1.5, 4|Crawl)
-# Tri(0, 1.5, 4|Basement)
-# Tri(6, 9, 12|Pier)
-# Tri (6, 9, 12|Pile)
-# For this case study, only need 'S', 'C', and 'B'
 ffe_dict:
   S: [0, .5, 1.5]
   C: [0, 1.5, 4]
   B: [0, 1.5, 4]
 
-# Number of SOWs
-sows: 10000
+## Convergence testing
+# Number of seeds 
+seeds: 20
+# SOWs to test 
+sow_test: [10, 100, 500, 1000]
 
-# Hazard model configurations
+## Ensemble experiments
+# For all flood scenarios
+base_configs:
+  no_adj:
+    coef_var: .2
+    n_sow: 500
+    id_col: 'fd_id'
+    base_adj: False
+    depth_min: .01
+
+model_configs:
+  phil: 
+    struct_list: ['val_struct', 'ffe']
+    base_data: 'phil'
+    supp_data: []
+    label: 'Philly Inventory'
+  nsi_ddfs:
+    struct_list: []
+    base_data: 'nsi'
+    supp_data: []
+    label: 'NSI Loc., DDF Unc. Only'
+  nsi_unsafe: 
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'nsi'
+    supp_data: []
+    label: 'NSI Loc., NSI Struct All Unc.'
+  nsi_phil:
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'nsi'
+    supp_data: ['phil_stories_stats', 'phil_found_stats']
+    label: 'NSI Loc., Philly Sturct All Unc.'
+  phil_unsafe:
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'phil'
+    supp_data: []
+    label: 'Philly Loc., Philly Struct All Unc.'
+  phil_nsi:
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'phil'
+    supp_data: ['nsi_stories_stats', 'nsi_found_stats']
+    label: 'Philly Loc., NSI Struct All Unc.'
+
+# Number of SOWs
+# for main scenario ensemble
+sows: 1000
+
+# Depth grid id for 
+# main scenario
+# Could add to list if desired
+main_dg: ['009']  
+
+## Hazard model configurations
 # For this case study, we have 50 representations
 # of the same event. These files have the
 # same filenaming convention
