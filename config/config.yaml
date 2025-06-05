@@ -124,33 +124,68 @@ model_configs:
     struct_list: ['val_struct', 'ffe']
     base_data: 'phil'
     supp_data: []
+    val_adj: False
     label: 'Philly Inventory'
   nsi_ddfs:
     struct_list: []
     base_data: 'nsi'
     supp_data: []
+    val_adj: False
     label: 'NSI Loc., DDF Unc. Only'
   nsi_unsafe: 
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
     base_data: 'nsi'
     supp_data: []
+    val_adj: False
     label: 'NSI Loc., NSI Struct All Unc.'
   nsi_phil:
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
     base_data: 'nsi'
     supp_data: ['phil_stories_stats', 'phil_found_stats']
-    label: 'NSI Loc., Philly Sturct All Unc.'
+    val_adj: False
+    label: 'NSI Loc., Philly Struct All Unc.'
   phil_unsafe:
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
     base_data: 'phil'
     supp_data: []
+    val_adj: False
     label: 'Philly Loc., Philly Struct All Unc.'
-  phil_nsi:
+  nsi_allphil:
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
-    base_data: 'phil'
-    supp_data: ['nsi_stories_stats', 'nsi_found_stats']
-    label: 'Philly Loc., NSI Struct All Unc.'
+    base_data: 'nsi'
+    supp_data: ['phil_stories_stats', 'phil_found_stats']
+    val_adj: True
+    label: 'NSI Loc., Philly Struct All Unc w Val Update.'
 
+# Overarching inventory adjustments
+# for main and sensitivity
+# runs for all the experiments
+# We update 
+# whether to look at assigned or all res1
+# min depth thresholds
+# whether to truncate structure values for 3s buildings
+sample_configs:
+  main:
+    trunc_val: False
+    d_min: .01
+    res1_bool: True
+  sa1:
+    trunc_val: True
+    d_min: .01
+    res1_bool: True
+  sa2:
+    trunc_val: False
+    d_min: .01
+    res1_bool: False
+  sa3:
+    trunc_val: False
+    d_min: .001
+    res1_bool: True
+  sa4:
+    trunc_val: False
+    d_min: .1
+    res1_bool: True
+    
 # Number of SOWs
 # for main scenario ensemble
 sows: 1000

@@ -269,7 +269,7 @@ def strct_summ_stats(primary_df, reference_df, strct_col, id_col='tract_id'):
     
     return char_stats
 
-def run_ensemble_analysis(base_configs, model_configs, dg_id, save_ens, output_dir):
+def run_ensemble_analysis(base_configs, model_configs, dg_id, s_name, save_ens, output_dir):
     """
     Generate an UNSAFE ensemble for the depth grid id and compare
     the specified experiments to losses obtained with the Philly inventory. 
@@ -289,6 +289,9 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, save_ens, output_d
     dg_id: str
         The id for the depth grid.
     
+    s_name: str
+        Indicates which analysis the results are for (main, sens analysis 1, etc.,)
+        
     save_ens : Boolean
         Whether to save the UNSAFE ensemble.
 
@@ -322,7 +325,7 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, save_ens, output_d
         )
         # Save all experiment ensembles if saving depth grid results
         if save_ens:
-            exp_filep = join(output_dir, f'main_exp_{dg_id}_{model_name}.pqt')
+            exp_filep = join(output_dir, f'main_exp_{dg_id}_{model_name}_{s_name}.pqt')
             results[model_name].to_parquet(exp_filep)
         
     # We also run a no uncertainty variation for
@@ -338,7 +341,7 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, save_ens, output_d
     )
     # Save no uncertainty results if saving depth grid results
     if save_ens:
-        no_unc.to_parquet(join(output_dir, f"no_unc_{dg_id}.pqt"))
+        no_unc.to_parquet(join(output_dir, f"no_unc_{dg_id}_{s_name}.pqt"))
 
     ### Calculate summary stats for each experiment and return ### 
     # We need to aggregate all the damage estimates to the tract
@@ -360,7 +363,7 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, save_ens, output_d
                                        result_keys)
 
     # Calculate skill metrics from comparison dataframe
-    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe', 'nsi_phil', 'phil_nsi', 'phil_unsafe']
+    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe', 'nsi_phil', 'nsi_allphil', 'phil_unsafe']
     metrics = calculate_metrics(comp, exps, dam_col)
 
     elapsed_time = time.time() - start_time
@@ -384,6 +387,8 @@ def main():
     # Base & model-specific configurations
     base_configs = CONFIG['base_configs']
     model_configs = CONFIG['model_configs']
+    # Sample configurations for main and sens analysis 
+    sample_configs = CONFIG['sample_configs']
     # SOWs for non main scenarios
     n_sow_supp = base_configs['no_adj']['n_sow']
 
@@ -393,9 +398,9 @@ def main():
     phil_inv_ens = pd.read_parquet(join(EXP_DIR_I, FIPS, 'phil_inv_ens.pqt'))
 
     # Load in NSI & Phil depth dataframes
-    nsi_depths_filep = join(EXP_DIR_I, FIPS, 'nsi_depths.pqt')
+    nsi_depths_filep = join(EXP_DIR_I, FIPS, 'nsi_depths_updated.pqt')
     phil_depths_filep = join(EXP_DIR_I, FIPS, 'phil_depths.pqt')
-    nsi_depths_df = pd.read_parquet(nsi_depths_filep).set_index('fd_id')
+    nsi_depths_df = pd.read_parquet(nsi_depths_filep)
     phil_depths_df = pd.read_parquet(phil_depths_filep).set_index('bfid')
 
     # Derive summary stats on structure distributions
@@ -409,61 +414,117 @@ def main():
     # base_data & supp_data fields, update 
     # the dictionary key/values for passing on
     # to the analysis function
-    for exp_name, fields in model_configs.items():
-        # Set the inventory and depth data
-        if model_configs[exp_name]['base_data'] == 'phil':
-            model_configs[exp_name]['inventory'] = phil_inv_ens
-            model_configs[exp_name]['depths'] = phil_depths_df
-            model_configs[exp_name]['id_col'] = 'bfid'
-        else:
-            model_configs[exp_name]['inventory'] = nsi_inv_ens
-            model_configs[exp_name]['depths'] = nsi_depths_df
-        
-        # Set the summary stats data
-        if 'phil_stories_stats' in model_configs[exp_name]['supp_data']:
-            model_configs[exp_name]['stories_param'] = phil_stories_stats
-        if 'phil_stories_found' in model_configs[exp_name]['supp_data']:
-            model_configs[exp_name]['stories_param'] = phil_found_stats
-        if 'nsi_stories_stats' in model_configs[exp_name]['supp_data']:
-            model_configs[exp_name]['stories_param'] = nsi_stories_stats
-        if 'nsi_stories_found' in model_configs[exp_name]['supp_data']:
-            model_configs[exp_name]['stories_param'] = nsi_found_stats
 
-    ### Loop through scenarios and conduct analyses ###
-    # Can easily adjust this to run batch processes
-    # but looping through scenarios since relatively small problem
-    # We'll concat all metrics together to write out a single file
-    logger.info("Starting ensemble analysis across flood scenarios")
-    all_metrics = []
-    for ens in range(n_ens):
-        # By default, we don't save the ensemble
-        save_ens = False
+    # We want to run all experiments where we assume all
+    # structures are res1 as well - this will be our
+    # main analysis because of the missing res3 basement
+    # ddfs (our ad hoc adjustments will be a sensitivity
+    # analysis)
 
-        # Need to adjust the ensemble number to meet 
-        # the format of our scenario ids
-        dg_id = str(ens + 1).zfill(3)
+    for s_name, sample_filters in sample_configs.items():
+        trunc_val = sample_configs[s_name]['trunc_val']
+        d_min = sample_configs[s_name]['d_min']
+        res1_bool = sample_configs[s_name]['res1_bool']
 
-        # Update sow for main scenario(s)
-        # and save_ens option
-        if dg_id in main_scen:
-            base_configs['no_adj']['n_sow'] = n_sow_main
-            save_ens = True
-        else:
-            base_configs['no_adj']['n_sow'] = n_sow_supp
+        for exp_name, fields in model_configs.items():
+            # Set the inventory and depth data
+            if model_configs[exp_name]['base_data'] == 'phil':
+                model_configs[exp_name]['inventory'] = phil_inv_ens.copy()
+                model_configs[exp_name]['depths'] = phil_depths_df.copy()
+                model_configs[exp_name]['id_col'] = 'bfid'
+            else:
+                model_configs[exp_name]['inventory'] = nsi_inv_ens.copy()
+                model_configs[exp_name]['depths'] = nsi_depths_df.copy()
+            
+                # If value adjust flag is True, we need to update
+                # the NSI inventory structure values
+                # to better reflect the Philly structure values.
+                # We will do this by calculating discrepancy of average
+                # tract level value and applying this factor
+                # to each property in the tract
+                if model_configs[exp_name]['val_adj']:
+                    phil_vals = phil_inv_ens.groupby('tract_id')['val_struct'].mean()
+                    nsi_vals = nsi_inv_ens.groupby('tract_id')['val_struct'].mean()
+                    nsi_adj = (nsi_vals/phil_vals).fillna(1).rename('val_adj').reset_index()
+                    temp_vals = nsi_inv_ens[['tract_id', 'val_struct']].copy().reset_index()
+                    temp_vals = temp_vals.merge(nsi_adj, on='tract_id')
+                    temp_vals['val_struct'] = temp_vals['val_struct'] * temp_vals['val_adj']
+                    val_upd = dict(zip(temp_vals['fd_id'], temp_vals['val_struct']))
+                    temp = model_configs[exp_name]['inventory'].copy()
+                    temp['val_struct'] = temp.index.map(val_upd)
 
-        # Run ensemble analysis
-        metrics = run_ensemble_analysis(base_configs['no_adj'], model_configs, dg_id, save_ens, output_dir)
-        metrics_df = pd.DataFrame.from_dict(metrics).reset_index()
-        metrics_df = metrics_df.rename(columns={'index': 'metric'})
-        metrics_df = metrics_df.melt(id_vars='metric', var_name='experiment')
-        metrics_df['dg_id'] = dg_id
-        all_metrics.append(metrics_df)
-        logger.info(f"Ran Ensemble Analysis for Flood Scenario: {dg_id}")
+                    model_configs[exp_name]['inventory'] = temp.copy()
 
-    all_metrics_df = pd.concat(all_metrics, axis=0)
-    all_metrics_df.to_parquet(join(output_dir, 'all_metrics.pqt'))
+            # Update occtype if sample rule calls for it
+            if res1_bool:
+               # Make all the properties RES1
+               temp = model_configs[exp_name]['inventory'].copy()
+               temp.loc[:,'occtype'] = 'RES1'
+               model_configs[exp_name]['inventory'] = temp.copy()
+            
+            # Update base config
+            base_configs['d_min'] = d_min
 
-    logger.info("Wrote all performance metrics to file")
+            # Truncate values if sample rule calls for it
+            if trunc_val:
+                temp = model_configs[exp_name]['inventory'].copy()
+                # Update value structure based on the following rules
+                # If stories_n in 3, we want to adjust value at risk
+                # Assume uniform value throughout building
+                # If no basement, multiply by 2/3
+                # If basement, multiply by 3/4
+                b_mask = (temp['stories_n'] == 3) & (temp['found_type'] == 'B')
+                nb_mask = (temp['stories_n'] == 3) & (temp['found_type'] != 'B')
+                temp.loc[b_mask, 'val_struct'] = temp.loc[b_mask, 'val_struct']*.75
+                temp.loc[nb_mask, 'val_struct'] = temp.loc[nb_mask, 'val_struct']*.67
+
+                model_configs[exp_name]['inventory'] = temp.copy()
+
+            # Set the summary stats data
+            if 'phil_stories_stats' in model_configs[exp_name]['supp_data']:
+                model_configs[exp_name]['stories_param'] = phil_stories_stats
+            if 'phil_stories_found' in model_configs[exp_name]['supp_data']:
+                model_configs[exp_name]['stories_param'] = phil_found_stats
+            if 'nsi_stories_stats' in model_configs[exp_name]['supp_data']:
+                model_configs[exp_name]['stories_param'] = nsi_stories_stats
+            if 'nsi_stories_found' in model_configs[exp_name]['supp_data']:
+                model_configs[exp_name]['stories_param'] = nsi_found_stats
+
+        ### Loop through scenarios and conduct analyses ###
+        # Can easily adjust this to run batch processes
+        # but looping through scenarios since relatively small problem
+        # We'll concat all metrics together to write out a single file
+        logger.info(f"Starting ensemble analysis across flood scenarios: {s_name}")
+        all_metrics = []
+        for ens in range(n_ens):
+            # By default, we don't save the ensemble
+            save_ens = False
+
+            # Need to adjust the ensemble number to meet 
+            # the format of our scenario ids
+            dg_id = str(ens + 1).zfill(3)
+
+            # Update sow for main scenario(s)
+            # and save_ens option
+            if dg_id in main_scen:
+                base_configs['no_adj']['n_sow'] = n_sow_main
+                save_ens = True
+            else:
+                base_configs['no_adj']['n_sow'] = n_sow_supp
+
+            # Run ensemble analysis
+            metrics = run_ensemble_analysis(base_configs['no_adj'], model_configs, dg_id, s_name, save_ens, output_dir)
+            metrics_df = pd.DataFrame.from_dict(metrics).reset_index()
+            metrics_df = metrics_df.rename(columns={'index': 'metric'})
+            metrics_df = metrics_df.melt(id_vars='metric', var_name='experiment')
+            metrics_df['dg_id'] = dg_id
+            all_metrics.append(metrics_df)
+            logger.info(f"Ran Ensemble Analysis for Flood Scenario: {dg_id}")
+
+        all_metrics_df = pd.concat(all_metrics, axis=0)
+        all_metrics_df.to_parquet(join(output_dir, f'all_metrics_{s_name}.pqt'))
+
+        logger.info("Wrote all performance metrics to file")
 
 if __name__ == "__main__":
     main()
