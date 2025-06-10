@@ -443,12 +443,10 @@ def main():
                 # tract level value and applying this factor
                 # to each property in the tract
                 if model_configs[exp_name]['val_adj']:
-                    phil_vals = phil_inv_ens.groupby('tract_id')['val_struct'].mean()
-                    nsi_vals = nsi_inv_ens.groupby('tract_id')['val_struct'].mean()
-                    nsi_adj = (nsi_vals/phil_vals).fillna(1).rename('val_adj').reset_index()
-                    temp_vals = nsi_inv_ens[['tract_id', 'val_struct']].copy().reset_index()
-                    temp_vals = temp_vals.merge(nsi_adj, on='tract_id')
-                    temp_vals['val_struct'] = temp_vals['val_struct'] * temp_vals['val_adj']
+                    phil_vals = phil_inv_ens.groupby('tract_id')['val_struct'].median()
+                    temp_vals = nsi_inv_ens[['tract_id']].copy().reset_index()
+                    temp_vals = temp_vals.merge(phil_vals, on='tract_id')
+                    temp_vals['val_struct'] = temp_vals['val_struct'].fillna(0)
                     val_upd = dict(zip(temp_vals['fd_id'], temp_vals['val_struct']))
                     temp = model_configs[exp_name]['inventory'].copy()
                     temp['val_struct'] = temp.index.map(val_upd)
