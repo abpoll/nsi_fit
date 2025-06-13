@@ -363,7 +363,7 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, s_name, save_ens, 
                                        result_keys)
 
     # Calculate skill metrics from comparison dataframe
-    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe', 'nsi_phil', 'nsi_allphil', 'phil_unsafe']
+    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe', 'nsi_phil', 'nsi_allphil', 'nsiadj_unsafe']
     metrics = calculate_metrics(comp, exps, dam_col)
 
     elapsed_time = time.time() - start_time
@@ -395,6 +395,7 @@ def main():
     ### Load in all input data for ensembles ### 
     # Load in NSI & Phil inventories
     nsi_inv_ens = pd.read_parquet(join(EXP_DIR_I, FIPS, 'nsi_inv_ens.pqt'))
+    nsi_inv_ens_adj = pd.read_parquet(join(EXP_DIR_I, FIPS, 'nsi_inv_ens_adj.pqt'))
     phil_inv_ens = pd.read_parquet(join(EXP_DIR_I, FIPS, 'phil_inv_ens.pqt'))
 
     # Load in NSI & Phil depth dataframes
@@ -423,7 +424,7 @@ def main():
 
     for s_name, sample_filters in sample_configs.items():
         trunc_val = sample_configs[s_name]['trunc_val']
-        d_min = sample_configs[s_name]['d_min']
+        depth_min = sample_configs[s_name]['depth_min']
         res1_bool = sample_configs[s_name]['res1_bool']
 
         for exp_name, fields in model_configs.items():
@@ -432,8 +433,11 @@ def main():
                 model_configs[exp_name]['inventory'] = phil_inv_ens.copy()
                 model_configs[exp_name]['depths'] = phil_depths_df.copy()
                 model_configs[exp_name]['id_col'] = 'bfid'
-            else:
+            elif model_configs[exp_name]['base_data'] == 'nsi':
                 model_configs[exp_name]['inventory'] = nsi_inv_ens.copy()
+                model_configs[exp_name]['depths'] = nsi_depths_df.copy()
+            else:
+                model_configs[exp_name]['inventory'] = nsi_inv_ens_adj.copy()
                 model_configs[exp_name]['depths'] = nsi_depths_df.copy()
             
                 # If value adjust flag is True, we need to update
@@ -461,7 +465,7 @@ def main():
                model_configs[exp_name]['inventory'] = temp.copy()
             
             # Update base config
-            base_configs['d_min'] = d_min
+            base_configs['depth_min'] = depth_min
 
             # Truncate values if sample rule calls for it
             if trunc_val:
@@ -511,7 +515,8 @@ def main():
                 base_configs['no_adj']['n_sow'] = n_sow_supp
 
             # Run ensemble analysis
-            metrics = run_ensemble_analysis(base_configs['no_adj'], model_configs, dg_id, s_name, save_ens, output_dir)
+            metrics = run_ensemble_analysis(base_configs['no_adj'], model_configs,
+                                            dg_id, s_name, save_ens, output_dir)
             metrics_df = pd.DataFrame.from_dict(metrics).reset_index()
             metrics_df = metrics_df.rename(columns={'index': 'metric'})
             metrics_df = metrics_df.melt(id_vars='metric', var_name='experiment')

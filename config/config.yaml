@@ -144,12 +144,12 @@ model_configs:
     supp_data: ['phil_stories_stats', 'phil_found_stats']
     val_adj: False
     label: 'NSI Loc., Philly Struct All Unc.'
-  phil_unsafe:
+  nsiadj_unsafe:
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
-    base_data: 'phil'
+    base_data: 'nsi_adj'
     supp_data: []
     val_adj: False
-    label: 'Philly Loc., Philly Struct All Unc.'
+    label: 'NSI w/ Phil Parcel Updates'
   nsi_allphil:
     struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
     base_data: 'nsi'
@@ -167,23 +167,19 @@ model_configs:
 sample_configs:
   main:
     trunc_val: False
-    d_min: .01
+    depth_min: .01
     res1_bool: True
   sa1:
     trunc_val: True
-    d_min: .01
+    depth_min: .01
     res1_bool: True
   sa2:
     trunc_val: False
-    d_min: .01
+    depth_min: .01
     res1_bool: False
   sa3:
     trunc_val: False
-    d_min: .001
-    res1_bool: True
-  sa4:
-    trunc_val: False
-    d_min: .1
+    depth_min: .025
     res1_bool: True
     
 # Number of SOWs
