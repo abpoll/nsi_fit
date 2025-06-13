@@ -436,10 +436,7 @@ def main():
             elif model_configs[exp_name]['base_data'] == 'nsi':
                 model_configs[exp_name]['inventory'] = nsi_inv_ens.copy()
                 model_configs[exp_name]['depths'] = nsi_depths_df.copy()
-            else:
-                model_configs[exp_name]['inventory'] = nsi_inv_ens_adj.copy()
-                model_configs[exp_name]['depths'] = nsi_depths_df.copy()
-            
+
                 # If value adjust flag is True, we need to update
                 # the NSI inventory structure values
                 # to better reflect the Philly structure values.
@@ -456,7 +453,10 @@ def main():
                     temp['val_struct'] = temp.index.map(val_upd)
 
                     model_configs[exp_name]['inventory'] = temp.copy()
-
+            else:
+                model_configs[exp_name]['inventory'] = nsi_inv_ens_adj.copy()
+                model_configs[exp_name]['depths'] = nsi_depths_df.copy()
+            
             # Update occtype if sample rule calls for it
             if res1_bool:
                # Make all the properties RES1

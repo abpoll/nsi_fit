@@ -3,6 +3,9 @@
 data
 fig
 
+# Ignore batch jobs
+*.sh
+
 # Jupyter NB Checkpoints #
 ##########################
 .ipynb_checkpoints/
