@@ -167,19 +167,19 @@ model_configs:
 sample_configs:
   main:
     trunc_val: False
-    depth_min: .01
+    depth_min: .025
     res1_bool: True
   sa1:
     trunc_val: True
-    depth_min: .01
+    depth_min: .025
     res1_bool: True
   sa2:
     trunc_val: False
-    depth_min: .01
+    depth_min: .025
     res1_bool: False
   sa3:
     trunc_val: False
-    depth_min: .025
+    depth_min: .0762
     res1_bool: True
     
 # Number of SOWs

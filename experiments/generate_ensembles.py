@@ -143,9 +143,9 @@ def calculate_metrics(comp_df, exps, dam_col, baseline='phil'):
     baseline_rank = baseline_loss.rank(ascending=False)
     baseline_total = baseline_loss.sum()
     
-    # Top 20% tracts in baseline
-    top20_threshold = int(len(comp_df) * 0.1)
-    top20_tracts = baseline_loss.nlargest(top20_threshold).index
+    # Top 10% tracts in baseline
+    top10_threshold = int(len(comp_df) * 0.1)
+    top10_tracts = baseline_loss.nlargest(top10_threshold).index
     
     for exp in exps:
         exp_metrics = {}
@@ -174,26 +174,26 @@ def calculate_metrics(comp_df, exps, dam_col, baseline='phil'):
         
         # Top percentage rank correlation
         exp_metrics['rank_correlation_top20'] = stats.spearmanr( 
-            exp_rank[baseline_rank <= len(top20_tracts)],
-            baseline_rank[baseline_rank <= len(top20_tracts)]
+            exp_rank[baseline_rank <= len(top10_tracts)],
+            baseline_rank[baseline_rank <= len(top10_tracts)]
         )[0]
         
-        # Type 1 and Type 2 errors for top 20%
-        # Type 1: Baseline says it's top 20%, experiment says it's not
-        type1_error = len(set(top20_tracts) - set(exp_loss.nlargest(top20_threshold).index))
+        # Type 1 and Type 2 errors for top 10%
+        # Type 1: Baseline says it's top 10%, experiment says it's not
+        type1_error = len(set(top10_tracts) - set(exp_loss.nlargest(top10_threshold).index))
         exp_metrics['type1_error_count'] = type1_error 
-        exp_metrics['type1_pct'] = 100*type1_error/top20_threshold
+        exp_metrics['type1_pct'] = 100*type1_error/top10_threshold
         
-        # Type 2: Experiment says it's top 20%, baseline says it's not
-        type2_error = len(set(exp_loss.nlargest(top20_threshold).index) - set(top20_tracts))
+        # Type 2: Experiment says it's top 10%, baseline says it's not
+        type2_error = len(set(exp_loss.nlargest(top10_threshold).index) - set(top10_tracts))
         exp_metrics['type2_error_count'] = type2_error 
-        exp_metrics['type2_pct'] = 100*type2_error/top20_threshold
+        exp_metrics['type2_pct'] = 100*type2_error/top10_threshold
         
-        # Count of matched ranks
+        # Mean absolute error in tract damage percent
         exp_metrics['matched_top_rank_pct'] = (
-             exp_rank[exp_rank <= len(top20_tracts)] -
-             baseline_rank[baseline_rank <= len(top20_tracts)] == 0
-            ).sum()*100/len(top20_tracts)
+             exp_rank[exp_rank <= len(top10_tracts)] -
+             baseline_rank[baseline_rank <= len(top10_tracts)] == 0
+            ).sum()*100/len(top10_tracts)
 
 
         # std error of ranks
@@ -465,7 +465,7 @@ def main():
                model_configs[exp_name]['inventory'] = temp.copy()
             
             # Update base config
-            base_configs['depth_min'] = depth_min
+            base_configs['no_adj']['depth_min'] = depth_min
 
             # Truncate values if sample rule calls for it
             if trunc_val:
