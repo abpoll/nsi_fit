@@ -35,12 +35,6 @@ download:
         assess: "https://phl.carto.com/api/v2/sql?filename=opa_properties_public&format=geojson&skipfields=cartodb_id&q=SELECT+*+FROM+opa_properties_public"
         bldfp: "https://opendata.arcgis.com/api/v3/datasets/ab9e89e1273f445bb265846c90b38a96_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
         parcel: "https://opendata.arcgis.com/api/v3/datasets/84baed491de44f539889f2af178ad85c_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
-    url:
-        # We use the national flood hazard layer for flood zones
-        # These URLs currently are not in a structured format so I manually input this
-        # after searching on the FEMA map services center
-        pol:
-          nfhl: "https://hazards.fema.gov/nfhlv2/output/County/420757_20230701.zip"
         
   STATEABBR:
     url:
@@ -53,11 +47,6 @@ download:
         block: "https://www2.census.gov/geo/tiger/TIGER2022/TABBLOCK20/tl_2022_{STATEFIPS}_tabblock20.zip"
   NATION:
     url:
-      vuln:
-        social:
-          # CEJST and CDC SVI
-          cejst: "https://dblew8dgr6ajz.cloudfront.net/data-versions/2.0/data/score/downloadable/2.0-communities.csv"
-          svi: "https://svi.cdc.gov/Documents/Data/2020/csv/states/SVI_2020_US.csv"
       ref:
         # County and zip code tabulation area spatial data available for the whole country
         county: "https://www2.census.gov/geo/tiger/TIGER2022/COUNTY/tl_2022_us_county.zip"
@@ -117,7 +106,7 @@ base_configs:
     n_sow: 500
     id_col: 'fd_id'
     base_adj: False
-    depth_min: .01
+    depth_min: .025
 
 model_configs:
   phil: 
