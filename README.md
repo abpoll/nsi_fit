@@ -76,7 +76,7 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 2) If you used `conda` or `mamba` to create your environment, run `pip install git+https://github.com/abpoll/unsafe@v0.2` to use the modules in UNSAFE. 
 3) Set up the [Input data](#input-data).
 
-    a) Run `mkdir data/raw/external/haz/` then download the flood depth grids and catchment area shapefile from the Zenodo repository, which are available in a .zip directory, and unzip the directory. Move the contents (other .zip directories) into `data/raw/external/haz/`.
+    a) Run `mkdir data/raw/` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory. Move the contents into `data/raw/`. This includes subdirectories with a mix of .zip and non-compressed files. The first analysis notebook will unzip the data for you and put it in the right file locations. 
 4) Run the analysis in the following order:
 
 | Script Name | Description | Additional Details|
