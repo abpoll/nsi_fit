@@ -76,7 +76,7 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 2) If you used `conda` or `mamba` to create your environment, run `pip install git+https://github.com/abpoll/unsafe@v0.2` to use the modules in UNSAFE. 
 3) Set up the [Input data](#input-data).
 
-    a) Run `mkdir data/raw/` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory. Move the contents into `data/raw/`. This includes subdirectories with a mix of .zip and non-compressed files. The first analysis notebook will unzip the data for you and put it in the right file locations. 
+    a) Run `mkdir data` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory which will have the directory name `raw`. Move this directory into `data`. This includes subdirectories with a mix of .zip and non-compressed files. The first analysis notebook will unzip the data for you and put it in the right file locations. You may have to use the command line to unzip `inputs.zip` correctly. 
 4) Run the analysis in the following order:
 
 | Script Name | Description | Additional Details|
