@@ -81,11 +81,12 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 
 | Script Name | Description | Additional Details|
 | ----------- | ----------- | ------------------ |
-| `notebooks/prepare_data.ipynb` | Download and unzip data, create structure inventories from raw data, prepare and generate base ensemble data for damage estimates | You can just run all the cells, but we made this a notebook in the interest of transparency for processing decisions and include detailed descriptions of various processing steps for community scrutiny |
+| `notebooks/prepare_data.ipynb` | Download and unzip data, create structure inventories from raw data, prepare and generate base ensemble data for damage estimates | You can just run all the cells, but we made this a notebook in the interest of transparency for processing decisions and include detailed descriptions of various processing steps for community scrutiny. |
 | `experiments/generate_ensemble.py` | Generate ensembles for all 50 flood scenarios and calcluate performance metrics for different inventory design approaches | The `config.yaml` file specifies the experimental design choices. |
-| `experiments/convergence_test.py` | Identify the sample sizes required for the UNSAFE ensembles | This script outputs a figure for revieiwng convergence at different sample sizes |
+| `experiments/convergence_test.py` | Identify the sample sizes required for the UNSAFE ensembles | This script outputs a figure for revieiwng convergence at different sample sizes. Run `python convergence_test.py --scenario 009` from the `experiments/` directory to reproduce our results. |
 | `notebooks/results.ipynb` | Generate figures and summary statistics | -- |
-| `notebooks/supplementary.ipynb` | Generate supplementary material, mostly figures | -- |
+
+For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (e.g., downloading data and unzipping compressed data) because we make all the inputs available. You are free to uncomment and test that functionality, but note that the code downloads data from servers and this may be different than the inputs we used in our analysis. 
 
 ## Contact (corresponding author)
 So far, these instructions have resulted in successful reproduction of the figures and statistics reported in the manuscript, but you may run into issues and need assistance debugging. Please contact Adam Pollack at adam.b.pollack@dartmouth.edu if you have any issues following these steps. 
