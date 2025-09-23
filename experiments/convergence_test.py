@@ -200,6 +200,7 @@ def assess_convergence(config, output_dir, fig_dir):
     ax.set_ylabel('Proportion of Properties\nWith Converged Damage Estiamtes', size=12)
     ax.tick_params(labelsize=12)
     ax.set_ylim([0, 1.02])
+    unfile.prepare_saving(join(FIG_DIR, 'conv_check.png'))
     fig.savefig(join(FIG_DIR, 'conv_check.png'), dpi=300, bbox_inches='tight')
 
     elapsed_time = time.time() - start_time
