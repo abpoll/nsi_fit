@@ -79,7 +79,7 @@ def run_seed_analysis(config, dg_id, seed, output_dir):
     nsi_depths_filep = join(EXP_DIR_I, FIPS, 'nsi_depths.pqt')
     nsi_depths_df = pd.read_parquet(nsi_depths_filep).set_index('fd_id')
 
-    d_min = 0.01
+    d_min = 0.025
     model_config = {
         'struct_list': ['val_struct', 'ffe', 'num_story', 'found_type'],
         'id_col': 'fd_id',
