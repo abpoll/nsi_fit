@@ -91,4 +91,6 @@ For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (
 You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html)
 
 ## Contact (corresponding author)
-So far, these instructions have resulted in successful reproduction of the figures and statistics reported in the manuscript, but you may run into issues and need assistance debugging. Please contact Adam Pollack at adam.b.pollack@dartmouth.edu if you have any issues following these steps. 
+This experiment was designed and run on an Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-102-generic x86_64) machine with mamba version 1.4.2. Using the same machine, Alexis Hudes successfully reproduced the figures and statistics reported in the manuscript on September 27, 2025. 
+
+Please contact Adam Pollack at adam.b.pollack@dartmouth.edu if you have any issues following these steps. 
