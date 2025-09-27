@@ -60,7 +60,7 @@ Clone the repository into a local project directory.
 This project was developed with Python version 3.12.10
 
 #### With Conda
-From the terminal in your local project directory, run `cd env` and then `conda env create -f env/environment.yml` or replace `conda` with `mamba`.
+From the terminal in your local project directory, run `cd env` and then `conda env create -f environment.yml` or replace `conda` with `mamba`.
 
 This is the approach the developers used, and our colleagues who tested the repository for reproducibility.
 
@@ -83,10 +83,12 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 | ----------- | ----------- | ------------------ |
 | `notebooks/prepare_data.ipynb` | Download and unzip data, create structure inventories from raw data, prepare and generate base ensemble data for damage estimates | You can just run all the cells, but we made this a notebook in the interest of transparency for processing decisions and include detailed descriptions of various processing steps for community scrutiny. |
 | `experiments/convergence_test.py` | Identify the sample sizes required for the UNSAFE ensembles | This script outputs a figure for revieiwng convergence at different sample sizes. Run `python convergence_test.py --scenario 009` from the `experiments/` directory to reproduce our results. |
-| `experiments/generate_ensemble.py` | Generate ensembles for all 50 flood scenarios and calcluate performance metrics for different inventory design approaches | The `config.yaml` file specifies the experimental design choices. |
+| `experiments/generate_ensembles.py` | Generate ensembles for all 50 flood scenarios and calcluate performance metrics for different inventory design approaches | The `config.yaml` file specifies the experimental design choices. |
 | `notebooks/results.ipynb` | Generate figures and summary statistics | -- |
 
 For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (e.g., downloading data and unzipping compressed data) because we make all the inputs available. You are free to uncomment and test that functionality, but note that the code downloads data from servers and this may be different than the inputs we used in our analysis. 
+
+You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html)
 
 ## Contact (corresponding author)
 So far, these instructions have resulted in successful reproduction of the figures and statistics reported in the manuscript, but you may run into issues and need assistance debugging. Please contact Adam Pollack at adam.b.pollack@dartmouth.edu if you have any issues following these steps. 
