@@ -88,7 +88,7 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 
 For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (e.g., downloading data and unzipping compressed data) because we make all the inputs available. You are free to uncomment and test that functionality, but note that the code downloads data from servers and this may be different than the inputs we used in our analysis. 
 
-You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html)
+You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/notebooks/results.html)
 
 ## Contact (corresponding author)
 This experiment was designed and run on an Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-102-generic x86_64) machine with mamba version 1.4.2. Using the same machine, Alexis Hudes successfully reproduced the figures and statistics reported in the manuscript on September 27, 2025. 
