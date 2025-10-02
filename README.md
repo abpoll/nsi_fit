@@ -3,7 +3,7 @@
 **Refining structure inventories for improved flood-risk assessment**
 
 ## Abstract
-Flood-risk assessments inform consequential public decisions. These assessments increasingly use large-scale structure inventories that offer granular resolution but provide little quality assurance. The U.S. Army Corps’ National Structure Inventory (NSI) is a prominent example. The Corps explicitly recommends that users evaluate data quality and adjust attributes as necessary. However, many studies skip this step. How accurate is the NSI and how do any errors influence risk assessments and decisions? Here we use a case study for the city of Philadelphia, comparing NSI-based damage estimates against estimates with high-quality local inventory data under 50 realistic Hurricane Irene flood scenarios. The common practice of naively adopting the NSI can systematically distort flood damage estimates with potentially drastic implications for resource allocation decisions. Using the NSI to rank census tracts by damage – a common metric for prioritizing federal disaster funding – generally misclassifies one-fifth of tracts regarding their priority status. Simple refinements, including structure location corrections, dramatically improve reliability, leading to correct identification of all tracts with respect to priority status in all but one flood scenario. Our findings demonstrate how overconfident use of granular structure inventories can compromise risk assessments and we provide actionable guidance for enhancing inventory reliability. 
+Flood-risk assessments inform consequential public decisions. These assessments increasingly use large-scale building inventories that offer granular details but come with little quality assurance. The U.S. Army Corps’ National Structure Inventory (NSI) is a prominent example. The Corps explicitly recommends that users evaluate data quality and adjust attributes as necessary. However, many studies skip this step. This raises the questions: How accurate is the NSI and how do any errors influence risk assessments and decisions? Here we use a case study for the city of Philadelphia, Pennsylvania comparing NSI-based damage estimates against estimates with high-quality, feature-rich local building data under an ensemble of flood scenarios. The nearly ubiquitous practice of adopting the NSI without refinements can systematically distort flood damage estimates with potentially drastic implications for resource allocation decisions. Using the NSI to rank census tracts by damage – a common metric for prioritizing federal disaster funding – generally misclassifies one-fifth of tracts regarding their priority status. Simple refinements, for example correcting building locations, can drastically reduce classification errors, leading to correct identification of all tracts with respect to priority status in all but one flood scenario. Our findings demonstrate how the use of unrefined nationwide building inventories can compromise risk assessments and mislead resource allocation. We provide actionable guidance for enhancing inventory reliability to improve risk estimation and decision analyses.
 
 ## Journal reference
 Will update upon acceptance to a peer-reviewed journal. 
@@ -22,7 +22,7 @@ Several datasets were downloaded from minted repositories:
 
 | Dataset | DOI |
 |---------|-----|
-| Flood depth grids for case study | TO DO - could also just include in our input data release |
+| Flood depth grids for case study | Will upload upon acceptance to peer-reviewed journal |
 | NACCS depth-damage functions | https://zenodo.org/doi/10.5281/zenodo.10027235 |
 
 Several datasets were downloaded from URLs:
@@ -46,7 +46,7 @@ If you want to download the latest version of the data above, you can uncomment 
 
 ### Output data
 
-All processed and output data are avaialble at the Zenodo repo: . 
+All processed and output data are avaialble at the Zenodo repo: will upload upon acceptance to peer-reviewed journal. 
 
 ## Reproduce our analysis
 Reproducibility for this project does not guarantee bit-wise reproduction for all results because there are stochastic processes. However, you should obtain very similar results because we tested our sample sizes for convergence (with specified seeds, so you can reproduce those results) to ensure we sample sufficiently for all reported results. 
@@ -88,7 +88,7 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 
 For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (e.g., downloading data and unzipping compressed data) because we make all the inputs available. You are free to uncomment and test that functionality, but note that the code downloads data from servers and this may be different than the inputs we used in our analysis. 
 
-You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html)
+You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html). Note: this will only be viewable once the repository is set to public. In the meantime, reviewers may look at the results in the `fig/` directory or open the `results.html` file in a web browser. 
 
 ## Contact (corresponding author)
 This experiment was designed and run on an Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-102-generic x86_64) machine with mamba version 1.4.2. Using the same machine, Alexis Hudes successfully reproduced the figures and statistics reported in the manuscript on September 27, 2025. 
