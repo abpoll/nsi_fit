@@ -1,5 +1,7 @@
 # Pollack-etal-2025-inprep
 
+[![DOI](https://zenodo.org/badge/898646830.svg)](https://doi.org/10.5281/zenodo.18500793)
+
 **Refining structure inventories for improved flood-risk assessment**
 
 ## Abstract
