@@ -22,7 +22,7 @@ Several datasets were downloaded from minted repositories:
 
 | Dataset | DOI |
 |---------|-----|
-| Flood depth grids for case study | Will upload upon acceptance to peer-reviewed journal |
+| Flood depth grids for case study | https://zenodo.org/records/17251835 |
 | NACCS depth-damage functions | https://zenodo.org/doi/10.5281/zenodo.10027235 |
 
 Several datasets were downloaded from URLs:
@@ -34,7 +34,7 @@ Several datasets were downloaded from URLs:
 | Philadelphia Building Footprints | https://opendata.arcgis.com/api/v3/datasets/ab9e89e1273f445bb265846c90b38a96_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 | Philadelphia Tax Parcel Boundaries | https://opendata.arcgis.com/api/v3/datasets/84baed491de44f539889f2af178ad85c_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 
-The analysis code can automatically downloads datasets from these URLs, but that option is commented out for sharing purposes so that users can readily work with the same data as the published analysis. The download code all downloads US Census shape files (e.g., tracts) and other datasets, all of which are included at this Zenodo repo: .
+The analysis code can automatically downloads datasets from these URLs, but that option is commented out for sharing purposes so that users can readily work with the same data as the published analysis. The download code downloads US Census shape files (e.g., tracts) and other datasets, all of which are included at this Zenodo repo: [will upload upon acceptance to peer-reviewed journal].
 
 If you want to download the latest version of the data above, you can uncomment the download code and double-check the specified URLs in the `config/config.yaml` file under the `download` key. 
 
@@ -46,7 +46,7 @@ If you want to download the latest version of the data above, you can uncomment 
 
 ### Output data
 
-All processed and output data are avaialble at the Zenodo repo: will upload upon acceptance to peer-reviewed journal. 
+All processed and output data are avaialble at the Zenodo repo: [will upload upon acceptance to peer-reviewed journal].
 
 ## Reproduce our analysis
 Reproducibility for this project does not guarantee bit-wise reproduction for all results because there are stochastic processes. However, you should obtain very similar results because we tested our sample sizes for convergence (with specified seeds, so you can reproduce those results) to ensure we sample sufficiently for all reported results. 
@@ -76,7 +76,9 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 2) If you used `conda` or `mamba` to create your environment, run `pip install git+https://github.com/abpoll/unsafe@v0.2` to use the modules in UNSAFE. 
 3) Set up the [Input data](#input-data).
 
-    a) Run `mkdir data` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory which will have the directory name `raw`. Move this directory into `data`. This includes subdirectories with a mix of .zip and non-compressed files. The first analysis notebook will unzip the data for you and put it in the right file locations. You may have to use the command line to unzip `inputs.zip` correctly. 
+    a) Run `mkdir data` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory which will have the directory name `raw`. Move this directory into `data`. This includes subdirectories with a mix of .zip and non-compressed files. 
+    b) The external hazard data could be downloaded separately from [this](https://zenodo.org/records/17251835) repository but the subdirectory names may be different and the code may not run correctly. You can confirm that these hazard files match what is included in our `raw.zip` separately. 
+    c) The notebook you run, `prepare_data.ipynb` will unzip the data for you and put it in the right file locations. You may have to use the command line to unzip `inputs.zip` correctly. The subdirectories in `data/raw` should be `exp`, `pol`, `ref`, `vuln`, `external`.  
 4) Run the analysis in the following order:
 
 | Script Name | Description | Additional Details|
@@ -88,9 +90,11 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 
 For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (e.g., downloading data and unzipping compressed data) because we make all the inputs available. You are free to uncomment and test that functionality, but note that the code downloads data from servers and this may be different than the inputs we used in our analysis. 
 
-You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html). Note: this will only be viewable once the repository is set to public. In the meantime, reviewers may open the `results.html` file in a web browser. 
+You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html). You can also compare your processed data and results to the unzipped `interim.zip` and `results.zip` contents. In the project directory, you should have `raw`, `interim`, and `results` as subdirectories of `data/`. 
+
+On the machines that developed, ran, and reproduced this analysis, the entire analysis - including running the convergence test script - took several hours. The Jupyter notebooks took minutes to run so if your goal is to confirm our analysis, you can directly work from the unzipped `interim.zip` contents and run `results.ipynb`. If you wanted to test the full workflow in a shorter time, you can run `generate_ensembles.py` in a distributed fashion to speed up the ensemble generation substantially. 
 
 ## Contact (corresponding author)
 This experiment was designed and run on an Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-102-generic x86_64) machine with mamba version 1.4.2. Using the same machine, Alexis Hudes successfully reproduced the figures and statistics reported in the manuscript on September 27, 2025. 
 
-Please contact Adam Pollack at adam.b.pollack@dartmouth.edu if you have any issues following these steps. 
+Please contact Adam Pollack at adam-pollack@uiowa.edu if you have any issues following these steps. 
