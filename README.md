@@ -36,7 +36,7 @@ Several datasets were downloaded from URLs:
 | Philadelphia Building Footprints | https://opendata.arcgis.com/api/v3/datasets/ab9e89e1273f445bb265846c90b38a96_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 | Philadelphia Tax Parcel Boundaries | https://opendata.arcgis.com/api/v3/datasets/84baed491de44f539889f2af178ad85c_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 
-The analysis code can automatically downloads datasets from these URLs, but that option is commented out for sharing purposes so that users can readily work with the same data as the published analysis. The download code downloads US Census shape files (e.g., tracts) and other datasets, all of which are included at this Zenodo repo: [will upload upon acceptance to peer-reviewed journal].
+The analysis code can automatically downloads datasets from these URLs, but that option is commented out for sharing purposes so that users can readily work with the same data as the published analysis. The download code downloads US Census shape files (e.g., tracts) and other datasets, all of which are included at this Zenodo repo: <https://zenodo.org/records/18500883>
 
 If you want to download the latest version of the data above, you can uncomment the download code and double-check the specified URLs in the `config/config.yaml` file under the `download` key. 
 
@@ -48,7 +48,7 @@ If you want to download the latest version of the data above, you can uncomment 
 
 ### Output data
 
-All processed and output data are avaialble at the Zenodo repo: [will upload upon acceptance to peer-reviewed journal].
+All processed and output data are avaialble at the Zenodo repo: <https://zenodo.org/records/18500883>
 
 ## Reproduce our analysis
 Reproducibility for this project does not guarantee bit-wise reproduction for all results because there are stochastic processes. However, you should obtain very similar results because we tested our sample sizes for convergence (with specified seeds, so you can reproduce those results) to ensure we sample sufficiently for all reported results. 
