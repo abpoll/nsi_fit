@@ -363,7 +363,9 @@ def run_ensemble_analysis(base_configs, model_configs, dg_id, s_name, save_ens, 
                                        result_keys)
 
     # Calculate skill metrics from comparison dataframe
-    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe', 'nsi_phil', 'nsi_allphil', 'nsiadj_unsafe']
+    exps = ['nsi_nounc', 'nsi_ddfs', 'nsi_unsafe',
+            'nsi_phil', 'nsi_allphil', 'nsiadj_unsafe',
+            'nsiloc_tract', 'nsiloc']
     metrics = calculate_metrics(comp, exps, dam_col)
 
     elapsed_time = time.time() - start_time
@@ -397,6 +399,7 @@ def main():
     nsi_inv_ens = pd.read_parquet(join(EXP_DIR_I, FIPS, 'nsi_inv_ens.pqt'))
     nsi_inv_ens_adj = pd.read_parquet(join(EXP_DIR_I, FIPS, 'nsi_inv_ens_adj.pqt'))
     phil_inv_ens = pd.read_parquet(join(EXP_DIR_I, FIPS, 'phil_inv_ens.pqt'))
+    nsi_inv_loc = pd.read_parquet(join(EXP_DIR_I, FIPS, 'nsi_inv_loc.pqt'))
 
     # Load in NSI & Phil depth dataframes
     nsi_depths_filep = join(EXP_DIR_I, FIPS, 'nsi_depths_updated.pqt')
@@ -453,9 +456,30 @@ def main():
                     temp['val_struct'] = temp.index.map(val_upd)
 
                     model_configs[exp_name]['inventory'] = temp.copy()
-            else:
+            elif model_configs[exp_name]['base_data'] == 'nsi_adj':
                 model_configs[exp_name]['inventory'] = nsi_inv_ens_adj.copy()
                 model_configs[exp_name]['depths'] = nsi_depths_df.copy()
+            
+            else:
+                model_configs[exp_name]['inventory'] = nsi_inv_loc.copy()
+                model_configs[exp_name]['depths'] = nsi_depths_df.copy()
+
+                # If value adjust flag is True, we need to update
+                # the NSI inventory structure values
+                # to better reflect the Philly structure values.
+                # We will do this by calculating discrepancy of average
+                # tract level value and applying this factor
+                # to each property in the tract
+                if model_configs[exp_name]['val_adj']:
+                    phil_vals = phil_inv_ens.groupby('tract_id')['val_struct'].median()
+                    temp_vals = nsi_inv_loc[['tract_id']].copy().reset_index()
+                    temp_vals = temp_vals.merge(phil_vals, on='tract_id')
+                    temp_vals['val_struct'] = temp_vals['val_struct'].fillna(0)
+                    val_upd = dict(zip(temp_vals['fd_id'], temp_vals['val_struct']))
+                    temp = model_configs[exp_name]['inventory'].copy()
+                    temp['val_struct'] = temp.index.map(val_upd)
+
+                    model_configs[exp_name]['inventory'] = temp.copy()
             
             # Update occtype if sample rule calls for it
             if res1_bool:

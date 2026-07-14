@@ -145,6 +145,18 @@ model_configs:
     supp_data: ['phil_stories_stats', 'phil_found_stats']
     val_adj: True
     label: 'NSI Loc., Philly Struct All Unc w Val Update.'
+  nsiloc_tract:
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'nsi_loc'
+    supp_data: ['phil_stories_stats', 'phil_found_stats']
+    val_adj: True
+    label: 'NSI w/ Phil Parcel Loc & Tract Updates'
+  nsiloc:
+    struct_list: ['val_struct', 'ffe', 'num_story', 'found_type']
+    base_data: 'nsi_loc'
+    supp_data: []
+    val_adj: False
+    label: 'NSI w/ Phil Parcel Loc'
 
 # Overarching inventory adjustments
 # for main and sensitivity

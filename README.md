@@ -2,21 +2,21 @@
 
 [![DOI](https://zenodo.org/badge/898646830.svg)](https://doi.org/10.5281/zenodo.18500793)
 
-**Refining structure inventories for improved flood-risk assessment**
+**Unrefined national building inventories can mislead risk assessments and decisions**
 
 ## Abstract
-Flood-risk assessments inform consequential public decisions. These assessments increasingly use large-scale building inventories that offer granular details but come with little quality assurance. The U.S. Army Corps’ National Structure Inventory (NSI) is a prominent example. The Corps explicitly recommends that users evaluate data quality and adjust attributes as necessary. However, many studies skip this step. This raises the questions: How accurate is the NSI and how do any errors influence risk assessments and decisions? Here we use a case study for the city of Philadelphia, Pennsylvania comparing NSI-based damage estimates against estimates with high-quality, feature-rich local building data under an ensemble of flood scenarios. The nearly ubiquitous practice of adopting the NSI without refinements can systematically distort flood damage estimates with potentially drastic implications for resource allocation decisions. Using the NSI to rank census tracts by damage – a common metric for prioritizing federal disaster funding – generally misclassifies one-fifth of tracts regarding their priority status. Simple refinements, for example correcting building locations, can drastically reduce classification errors, leading to correct identification of all tracts with respect to priority status in all but one flood scenario. Our findings demonstrate how the use of unrefined nationwide building inventories can compromise risk assessments and mislead resource allocation. We provide actionable guidance for enhancing inventory reliability to improve risk estimation and decision analyses.
+Flood‑risk assessments guide large investments. Many impactful studies from local to broader scales use a nationwide building database, the U.S. National Structure Inventory (NSI), with minimal or no refinements. We find that errors in the NSI compared to a high-fidelity local inventory can drastically change decision-relevant risk metrics for a case study in Philadelphia, Pennsylvania across 50 realistic storm scenarios. For example, across this ensemble, relying on the unrefined NSI misclassified 18 to 36 percent of neighborhoods with respect to a stylized prioritization metric used to allocate billions of dollars in federal funds. We introduce simple inventory refinements that reduced risk-metric discrepancies. Our results have considerable implications for the conclusions of published research, resource allocation, and the design and use of future national building inventories.
 
 ## Journal reference
 Will update upon acceptance to a peer-reviewed journal. 
 
 ## Overview
-This repository stores the entire workflow for the article "Refining structure inventories for improved flood-risk assessment." This study evaluates whether the National Structure Inventory is fit-for-purpose for common risk assessment goals through a Philadelphia, PA case study. 
+This repository stores the entire workflow for the manuscript "Unrefined national building inventories can mislead risk assessments and decisions." This study evaluates whether the National Structure Inventory is fit-for-purpose for common risk assessment goals through a Philadelphia, PA case study. 
 
 ## Data and Code Reference
 This analysis makes use of raw data from a variety of sources and model output data from Deb et al., (2024), [Estuarine hurricane wind can intensify surge-dominated extreme water level in shallow and converging coastal systems, Nat. Hazards Earth Syst. Sci.](https://doi.org/10.5194/nhess-24-2461-2024).
 
-Below, we include links to all of the input data used in this analysis. Some of these data are not available in unique and persistent repositories, which could complicate a user's attempt to reproduce our analysis from scratch in the future. We make all input, processed, and output data from the day of our final analysis available at several Zenodo repositories. 
+Below, we include links to all of the input data used in this analysis. Some of these input data are not available in unique and persistent repositories, which could complicate a user's attempt to reproduce our analysis from scratch in the future. Therefore, we make all input, processed, and output data from the day of our final analysis available at several Zenodo repositories. 
 
 ### Input data
 
@@ -31,14 +31,14 @@ Several datasets were downloaded from URLs:
 
 | Dataset | URL | Download Data |
 |---------|-----|---------------|
-| National Structure Inventory (Philadelphia) | https://nsi.sec.usace.army.mil/nsiapi/structures?fips=42101 | May 2, 2025 |
+| 2022 National Structure Inventory (Philadelphia) | https://nsi.sec.usace.army.mil/nsiapi/structures?fips=42101 | May 2, 2025 |
 | Philadelphia Assessment Records | https://phl.carto.com/api/v2/sql?filename=opa_properties_public&format=geojson&skipfields=cartodb_id&q=SELECT+*+FROM+opa_properties_public | May 2, 2025 |
 | Philadelphia Building Footprints | https://opendata.arcgis.com/api/v3/datasets/ab9e89e1273f445bb265846c90b38a96_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 | Philadelphia Tax Parcel Boundaries | https://opendata.arcgis.com/api/v3/datasets/84baed491de44f539889f2af178ad85c_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1 | May 2, 2025 |
 
 The analysis code can automatically downloads datasets from these URLs, but that option is commented out for sharing purposes so that users can readily work with the same data as the published analysis. The download code downloads US Census shape files (e.g., tracts) and other datasets, all of which are included at this Zenodo repo: <https://zenodo.org/records/18500883>
 
-If you want to download the latest version of the data above, you can uncomment the download code and double-check the specified URLs in the `config/config.yaml` file under the `download` key. 
+If you want to download the latest version of the data above, you can uncomment the download code and double-check the specified URLs in the `config/config.yaml` file under the `download` key. Please note that the Army Corps recently released the 2026 version of the NSI. As such, running the download code would lead to a different inventory comparison than the one conducted in this study. 
 
 ### Contributing model software
 
@@ -94,7 +94,7 @@ For the `notebooks/prepare_data.ipynb`, some cells are initially commented out (
 
 You can check your run of `results.ipynb` [here](https://htmlpreview.github.io/?https://github.com/abpoll/nsi_fit/blob/main/notebooks/results.html). You can also compare your processed data and results to the unzipped `interim.zip` and `results.zip` contents. In the project directory, you should have `raw`, `interim`, and `results` as subdirectories of `data/`. 
 
-On the machines that developed, ran, and reproduced this analysis, the entire analysis - including running the convergence test script - took several hours. The Jupyter notebooks took minutes to run so if your goal is to confirm our analysis, you can directly work from the unzipped `interim.zip` contents and run `results.ipynb`. If you wanted to test the full workflow in a shorter time, you can run `generate_ensembles.py` in a distributed fashion to speed up the ensemble generation substantially. 
+On the machines that developed, ran, and reproduced this analysis, the entire analysis - including running the convergence test script - took approximately 20 hours. The Jupyter notebooks took minutes to run so if your goal is to confirm our analysis, you can directly work from the unzipped `interim.zip` contents and run `results.ipynb`. If you wanted to test the full workflow in a shorter time, you can run `generate_ensembles.py` in a distributed fashion to speed up the ensemble generation substantially. 
 
 ## Contact (corresponding author)
 This experiment was designed and run on an Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-102-generic x86_64) machine with mamba version 1.4.2. Using the same machine, Alexis Hudes successfully reproduced the figures and statistics reported in the manuscript on September 27, 2025. 
