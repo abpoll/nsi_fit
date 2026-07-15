@@ -78,8 +78,10 @@ Create an ipykernel for the environment. For the remainder of the instructions, 
 2) If you used `conda` or `mamba` to create your environment, run `pip install git+https://github.com/abpoll/unsafe@v0.2` to use the modules in UNSAFE. 
 3) Set up the [Input data](#input-data).
 
-    a) Run `mkdir data` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory which will have the directory name `raw`. Move this directory into `data`. This includes subdirectories with a mix of .zip and non-compressed files. 
+    a) Go back to the root of the project directory and run `mkdir data` then download the input data from the Zenodo repository, which are available in a .zip directory, and unzip the directory which will have the directory name `raw`. Move this directory into `data`. This includes subdirectories with a mix of .zip and non-compressed files. We provide a `download.py` script in the `zenodo/` directory, which is a little faster at getting the data in the right place than using the web interface. Please note that the archived data includes a `raw/unzipped/` directory as a reference for debugging and inspection. If you wish to reproduce the complete preprocessing pipeline from the original compressed inputs, delete `data/raw/unzipped/` before running the `prepare_data.ipynb` notebook. After extraction, you can compare the newly generated data/raw/unzipped/ against the archived version if you encounter discrepancies. To unzip all of the archives, you could run `for file in *.zip; do unzip "$file"; done`. 
+
     b) The external hazard data could be downloaded separately from [this](https://zenodo.org/records/17251835) repository but the subdirectory names may be different and the code may not run correctly. You can confirm that these hazard files match what is included in our `raw.zip` separately. 
+
     c) The notebook you run, `prepare_data.ipynb` will unzip the data for you and put it in the right file locations. You may have to use the command line to unzip `inputs.zip` correctly. The subdirectories in `data/raw` should be `exp`, `pol`, `ref`, `vuln`, `external`.  
 4) Run the analysis in the following order:
 

@@ -2,6 +2,7 @@ name: nsi-fit
 channels:
   - conda-forge
 dependencies:
+  - python=3.12.10
   - geopandas=1.0.1
   - pandas=2.2.0
   - jupyter=1.0.0
