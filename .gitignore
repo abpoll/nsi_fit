@@ -2,7 +2,7 @@
 # In general, we don't want the data directory
 data
 fig
-zenodo
+zenodo/upload.py
 
 # Ignore batch jobs
 *.sh
