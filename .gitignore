@@ -2,6 +2,7 @@
 # In general, we don't want the data directory
 data
 fig
+zenodo
 
 # Ignore batch jobs
 *.sh
